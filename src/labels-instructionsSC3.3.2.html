@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- External CDN for Font Awesome icons remember to host it locally if part of a larger project -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <title>WCAG 2.2 Demo – SC 3.3.2: Labels or Instructions</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      line-height: 1.6;
+      padding: 2rem;
+      background: #f9f9f9;
+    }
+    section {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: darkred;
+    
+    }
+    code {
+      background: #eee;
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+    }
+    small {
+      color: #555;
+    }
+	.disableeye input[type="password"]::-ms-reveal,
+	.disableeye input[type="password"]::-webkit-password-toggle-button {
+	  display: none !important;
+	}
+	
+	.sr-only {
+	  position: absolute !important;
+	  width: 1px; height: 1px;
+	  padding: 0; margin: -1px;
+	  overflow: hidden;
+	  clip: rect(0, 0, 0, 0);
+	  white-space: nowrap;
+	  border: 0;
+	}
+
+  </style>
+
+</head>
+<body>
+
+  <h1>WCAG 2.2 Demo: 3.3.2 – Labels or Instructions</h1>
+  <p>This demo illustrates various implementations related to <strong>Success Criterion 3.3.2 Labels or Instructions (Level A)</strong>, based on the guidance from <a href="https://www.w3.org/WAI/WCAG22/Understanding/labels-or-instructions.html">Understanding SC 3.3.2</a>. I also try to highlight how certain implementations may affect <a href="https://www.w3.org/WAI/WCAG22/Understanding/info-and-relationships.html">Success Criterion 1.3.1: Info and Relationships</a> (Level A).</p>
+  <p> At times, sticking to native HTML elements and familiar UI patterns reduces the need for workarounds and could also improves accessibility by ensuring predictable behavior for assistive technologies.</p>
+
+  <!-- Partially Correct Example -->
+  <section>
+    <h2>Passes 3.3.2: Proper Labels and Instructions</h2>
+    <form method="POST" action="#"> <!--WATCH OUT: If using as a template remember to change the action attribute to the ACTUAL endpoint in prod this is jsut a placeholder for demo-->
+      <label for="email">Email Address (required):</label><br>
+      <input type="email" id="email" name="email" required><br><br>
+
+      <label for="password">Password (required):</label><br>
+      <input type="password" id="password" name="password" required><br>
+      <small>Password must be at least 8 characters long.</small><br><br>
+      <button type="submit">Submit</button>
+    </form>
+    <p><strong>Why it's good:</strong> Inputs have visible labels, and helpful instructions are nearby.</p>
+	<p><strong>Why it may fail 1.3.1:</strong> Instruction is present visually, but to meet SC 1.3.1 (Info and Relationships), that instruction needs to be programmatically tied to the field.</p>
+  </section>
+  <!-- dynamic example -->
+  <section>
+  <h2>Passes both: Dynamic Instruction Password Field with programmatic association</h2>
+  <form method="POST" action="#">
+
+    <label for="email">Email Address <span aria-hidden="true" style="color: red;">*</span>:</label><br>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="password2">Password <span aria-hidden="true" style="color: red;">*</span>:</label><br>
+
+    <div class="disableeye">
+      <input
+        type="password"
+        id="password2"
+        name="password"
+        required
+        aria-describedby="passwordHelp"
+      />
+      <button
+        type="button"
+        id="togglePassword"
+        aria-pressed="false"
+        aria-label="Show password"
+        
+      >
+        <i class="fa fa-eye" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <ul id="passwordHelp" aria-live="polite" style="list-style: none; padding-left: 0; margin-top: 8px;">
+      <li>
+        <span id="symbolLength" aria-hidden="true">✗</span>
+        <span id="textLength">Requirement not met for at least 8 characters</span>
+      </li>
+      <li>
+        <span id="symbolUpper" aria-hidden="true">✗</span>
+        <span id="textUpper">Requirement not met for at least one uppercase letter</span>
+      </li>
+      <li>
+        <span id="symbolNumber" aria-hidden="true">✗</span>
+        <span id="textNumber">Requirement not met for at least one number</span>
+      </li>
+    </ul>
+
+    <button type="submit">Confirm</button>
+  </form>
+
+  <p><strong>Why it's good:</strong> Instructions are visible and dynamically updated. They are programmatically associated with the input using <code>aria-describedby</code> and the live feedback helps users know which rules are satisfied.</p>
+  <p>A favorite as it also may help with cognitive burden. This article on <a href="https://medium.com/@flik185/designing-a-better-password-input-field-140446e0ed08" target="_blank" rel="noopener">Designing a better password input field</a> describes the feedback prototype in detail.</p>
+  <p><strong>Why it passes both SC 3.3.2 and 1.3.1:</strong> All instructions are accessible to screen readers and clearly associated with the form control.</p>
+</section>
+
+
+
+  <!-- Incorrect: Placeholder Only -->
+  <section>
+    <h2>Pitfall: Placeholder-only cannot replace a label</h2>
+	<p> Though S.C 3.3.2 does not explicitly condemn having placeholder text alone, the <a href = https://www.w3.org/WAI/tutorials/forms/instructions/#placeholder-text> WAI instructions on placeholder text </a> along with some experts advice against using them as an alternative to actual labels.</p>
+    <form method="POST" action="#">
+      <input type="text" name="username" placeholder="Enter your username">
+      <button type="submit">Submit</button>
+    </form>
+    <p><strong>Issue:</strong> No visible label and placeholder disappears on focus/typing. Could fail both SC 3.3.2 and SC 1.3.1.</p>
+  </section>
+
+  <!-- Passes 3.3.2 but Fails 1.3.1 -->
+  <section>
+    <h2>Visible Instructions Only (Passes 3.3.2 but Fails 1.3.1)</h2>
+    <form method="POST" action="#">
+      <p>Enter your birth date in DD/MM/YYYY format:</p>
+      <input type="text" name="birthdate"> <!-- axe-linter wold tag it as label less -->
+      <button type="submit">Submit</button>
+    </form>
+    <p><strong>Issue:</strong> Visual instruction is provided, so it passes SC 3.3.2. But no programmatic association means it fails SC 1.3.1.</p>
+  </section>
+
+ <!-- Best Practice: Grouped phone number fields with invisible labels -->
+<!-- WCAG 2.2 - Grouped phone fields with title attributes and aria-describedby -->
+<section>
+  <h2>WCAG-suggested Phone Number Grouping (title + fieldset)</h2>
+  <form method="POST" action="#">
+    <fieldset aria-describedby="phoneInstructions">
+      <legend>Phone number</legend>
+
+      <p id="phoneInstructions">
+        <span class="sr-only">Enter your phone number in the format: open parenthesis one two three close parenthesis space four five six dash seven eight nine zero.</span>
+        <span aria-hidden="true">Enter your phone number in the format: (123) 456–7890</span>
+      </p>
+
+      (<input
+        type="text"
+        name="area"
+        size="3"
+        maxlength="3"
+        title="Area Code"
+        inputmode="numeric"
+        pattern="\d{3}"
+        class="phone-part"
+      >)
+      
+      <input
+        type="text"
+        name="exchange"
+        size="3"
+        maxlength="3"
+        title="Exchange"
+        inputmode="numeric"
+        pattern="\d{3}"
+        class="phone-part"
+      > -
+      
+      <input
+        type="text"
+        name="number"
+        size="4"
+        maxlength="4"
+        title="Number"
+        inputmode="numeric"
+        pattern="\d{4}"
+        class="phone-part"
+      >
+    </fieldset><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <p><strong>Why it's good:</strong> The three related fields are grouped using <code>fieldset</code> and <code>legend</code>, fulfilling the requirement for a shared label. The <code>title</code> attributes provide programmatic labels when visual labels are not allowed by design. Instructions about the expected format are programmatically associated with all three inputs using <code>aria-describedby</code>.</p>
+	<p> NOTE: We need to figure out other ways to ensure that the right formatting is read out by screen reader, NVDA currently does not read out the paranthesis, see <a href=https://www.deque.com/blog/dont-screen-readers-read-whats-screen-part-1-punctuation-typographic-symbols/>Why Don’t Screen Readers Always Read What’s on the Screen? Part 1: Punctuation and Typographic Symbols</a>. Just used a screen reader only class to workaround this for now.</p>
+</section>
+
+<script>
+  const passwordInput = document.getElementById('password2');
+  const toggleBtn = document.getElementById('togglePassword');
+  const toggleIcon = toggleBtn.querySelector('i');
+  const phoneInputs = document.querySelectorAll('.phone-part');
+  toggleBtn.addEventListener('click', () => {
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+
+    // Update aria-pressed and aria-label
+    toggleBtn.setAttribute('aria-pressed', String(isPassword));
+    toggleBtn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+
+    // Toggle Font Awesome icon classes
+    if (isPassword) {
+      toggleIcon.classList.remove('fa-eye');
+      toggleIcon.classList.add('fa-eye-slash');
+    } else {
+      toggleIcon.classList.remove('fa-eye-slash');
+      toggleIcon.classList.add('fa-eye');
+    }
+  });
+
+  passwordInput.addEventListener('input', function () {
+    const value = passwordInput.value;
+
+    const passLength = value.length >= 8;
+    const passUpper = /[A-Z]/.test(value);
+    const passNumber = /\d/.test(value);
+
+    // Update visible symbols
+    document.getElementById('symbolLength').textContent = passLength ? '✓' : '✗';
+    document.getElementById('symbolUpper').textContent = passUpper ? '✓' : '✗';
+    document.getElementById('symbolNumber').textContent = passNumber ? '✓' : '✗';
+
+    // Update text for screen reader
+    document.getElementById('textLength').textContent =
+      (passLength ? 'Requirement satisfied' : 'Requirement not met') + ' for at least 8 characters';
+
+    document.getElementById('textUpper').textContent =
+      (passUpper ? 'Requirement satisfied' : 'Requirement not met') + ' for at least one uppercase letter';
+
+    document.getElementById('textNumber').textContent =
+      (passNumber ? 'Requirement satisfied' : 'Requirement not met') + ' for at least one number';
+  });
+
+  phoneInputs.forEach((input, idx) => {
+	
+    input.addEventListener('input', e => {
+      // Strip non-digits as input is text
+    const digitsOnly = input.value.replace(/\D/g, '');
+      if (input.value !== digitsOnly) {
+        input.value = digitsOnly;
+      }
+    // move to next input when maxlength reached
+    if (digitsOnly.length >= input.maxLength) {
+      if (idx < phoneInputs.length - 1) {
+        phoneInputs[idx + 1].focus();
+      }
+    }
+  });
+});
+</script>
+
+</body>
+</html>

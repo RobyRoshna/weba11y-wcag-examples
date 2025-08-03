@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WCAG Focus Pitfalls Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h2 {
+      color: darkred;
+    }
+
+    button, a, input {
+      margin: 10px 0;
+      display: inline-block;
+      padding: 8px 12px;
+      font-size: 16px;
+    }
+
+    /* class hiding visible focus */
+    .no-outline:focus {
+      outline: none;
+    }
+
+    /* visible focus but custom satisfies AAA Focus appearance too!*/
+    .custom-focus:focus-visible {
+      outline: 3px solid #007BFF;
+      outline-offset: 2px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>Common WCAG Focus Visible Pitfalls</h1>
+
+  <hr>
+
+  <h2>Removing Focus Visibility with CSS</h2>
+  <p><strong>Issue:</strong> This button <em>has focus</em> when tabbed to, but you won’t see it because the outline was removed with CSS.</p>
+  <button class="no-outline" onclick="alert('Focused but not visible')">Focused but not visible Button (outline: none)</button>
+
+  <p><strong>Fix:</strong> Instead of JUST removing the outline, customize it with a visible style:</p>
+  <button class="custom-focus" onclick="alert('Clicked Customised Button')">Customised focus indicator on button</button>
+
+  <hr>
+
+  <h2>Removing Focus with via Scriptng</h2>
+  <p><strong>Issue:</strong> These elements actively <em>remove focus</em> using <code>this.blur()</code>, making them <strong>inaccessible by keyboard</strong>, see how the focus is seemingly lost.</p>
+
+  <input type="submit" value="Example Submit button" onfocus="this.blur();" onclick="alert('Clicked Blurred Input i.e no keyboard focus no visibility')">
+  <br>
+   <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html">
+    Good Example of a Link
+  </a>
+  <hr>
+  <h2> Explitily removing from Focus order</h2>
+  <p>
+  <strong>Issue:</strong> This button is <strong>not tabbable i.e it is not in the tab order</strong>, but still focusable via script or mouse.</p>
+  <button tabindex="0" onclick="alert('Not in Tab order')"> Sample Submit</button>
+	<br>
+   <a href="https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html">
+    Good Example of a Link
+  </a>
+  <hr>
+</body>
+</html>
