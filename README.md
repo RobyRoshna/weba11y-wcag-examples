@@ -6,7 +6,7 @@ Some examples are adapted from reputable accessibility sources (and cited), whil
 
 The examples are primarily written in **HTML with some CSS/JS** because:
 - HTML is the **foundation** of the web and most accessibility issues stem from markup and structure.
-- It allows clear demonstration of semantics, focus management, ARIA usage, and form labeling—core to many WCAG criteria.
+- It allows clear demonstration of semantics, focus management, ARIA usage, and form labeling.
 - These examples are **framework-agnostic** and easy to understand, copy, and test with assistive technologies.
 
 ---
