@@ -15,10 +15,14 @@ The examples are primarily written in **HTML with some CSS/JS** because:
 
 All examples are located in the `src/` directory. Each subfolder or file corresponds to a specific WCAG Success Criterion (SC):
 
+- **[Focus Visible (SC 2.4.7)](src/focus-visibleSC2.4.7.html)**  
+
+- **[Labels or Instructions (SC 3.3.2)](src/labels-instructionsSC3.3.2.html)**
+  
 - More to come 
 
 ---
 
 ## Disclaimer
 
-This repo is for educational purposes and does not represent a complete or certified WCAG audit tool.
+This repo is for educational/demo purposes and does not represent a complete or certified WCAG reference tool.
